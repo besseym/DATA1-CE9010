@@ -3,7 +3,7 @@
 size(400, 400);
 
 fill(#ffd700);
-
+strokeWeight(5);
 beginShape();
 
 //top point
