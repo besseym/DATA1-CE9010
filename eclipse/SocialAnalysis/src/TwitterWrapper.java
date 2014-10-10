@@ -54,32 +54,31 @@ public class TwitterWrapper {
 		List<Status> statusList = queryResult.getTweets();
 		result.setPostCount(statusList.size());
 		
-		Map<String, Integer> wordCountMap = null;
+		String text = null;
+		StatusAnalysis statusAnalysis = null;
 		
 		//analyze for positive words
-		WordDetector wordDetector = new WordDetector(positiveWordArray);
+		WordDetector positiveWordDetector = new WordDetector(positiveWordArray);
+		WordDetector negativeWordDetector = new WordDetector(negativeWordArray);
 		for(Status s : statusList){
 			
-			wordCountMap = wordDetector.detect(s.getText());
-			result.addToPositiveWordCount(wordCountMap);
-		}
-		
-		//analyze for negative words
-		wordDetector = new WordDetector(negativeWordArray);
-		for(Status s : statusList){
+			text = s.getText();
 			
-			wordCountMap = wordDetector.detect(s.getText());
-			result.addToNegativeWordCount(wordCountMap);
+			statusAnalysis = new StatusAnalysis(s.getId());
+			statusAnalysis.setPositiveWordCountMap(positiveWordDetector.detect(text));
+			statusAnalysis.setNegativeWordCountMap(negativeWordDetector.detect(text));
 		}
 		
 		//count users
-		for(Status s : statusList){
-			userSet.add(s.getUser().getScreenName());
-		}
+//		for(Status s : statusList){
+//			userSet.add(s.getUser().getScreenName());
+//		}
 		
 		result.setUserCount(userSet.size());
 		
 		return result;
 	}
+	
+	
 
 }
