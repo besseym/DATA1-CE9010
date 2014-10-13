@@ -76,6 +76,14 @@ public class StatusAnalysis implements Comparable<StatusAnalysis> {
 
 	/**
 	 * 
+	 * @param text
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public Date getCreatedAt() {
