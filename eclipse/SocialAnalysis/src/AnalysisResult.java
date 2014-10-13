@@ -1,5 +1,7 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -13,68 +15,144 @@ public class AnalysisResult {
 
 	private Long maxPostId;
 	
-	private Integer userCount;
-	private Integer postCount;
-	
-	private Map<String, Integer> positiveWordCountMap;
-	private Map<String, Integer> negativeWordCountMap;
+	private List<StatusAnalysis> statusList;
 	
 	/**
 	 * 
 	 */
 	public AnalysisResult() {
 		
-		this.userCount = Integer.valueOf(0);
-		this.postCount = Integer.valueOf(0);
+		this.maxPostId = null;
 		
-		this.positiveWordCountMap = new HashMap<String, Integer>();
-		this.negativeWordCountMap = new HashMap<String, Integer>();
+		this.statusList = new ArrayList<StatusAnalysis>();
 	}
 	
 	/**
 	 * 
-	 * @param wordCountMap
+	 * @param date
 	 */
-	public void addToPositiveWordCount(Map<String, Integer> wordCountMap){
+	public void removeOldStatuses(Date date){
 		
-		Integer count = null;
+		List<StatusAnalysis> removeList = new ArrayList<StatusAnalysis>();
 		
-		for(String word : wordCountMap.keySet()){
+		for(StatusAnalysis s : statusList){
 			
-			if(this.positiveWordCountMap.containsKey(word)){
-				
-				count = this.positiveWordCountMap.get(word);
-				count = count + wordCountMap.get(word);
+			if(s.getCreatedAt().before(date)){
+				removeList.add(s);
 			}
-			else {
-				count = wordCountMap.get(word);
-			}
-			
-			this.positiveWordCountMap.put(word, count);
+		}
+		
+		for(StatusAnalysis s : removeList){
+			statusList.remove(s);
 		}
 	}
 	
 	/**
 	 * 
-	 * @param wordCountMap
+	 * @return
 	 */
-	public void addToNegativeWordCount(Map<String, Integer> wordCountMap){
+	public Integer getMinWordCount(){
 		
-		Integer count = null;
+		Integer min = null;
 		
-		for(String word : wordCountMap.keySet()){
+		if(!statusList.isEmpty()){
 			
-			if(this.negativeWordCountMap.containsKey(word)){
+			min = statusList.get(0).getNetWordCount();
+			
+			int value = 0;
+			for(int i = 1; i < statusList.size(); i++){
 				
-				count = this.negativeWordCountMap.get(word);
-				count = count + wordCountMap.get(word);
+				value = statusList.get(i).getNetWordCount();
+				if(value < min){
+					
+					min = value;
+				}
 			}
-			else {
-				count = wordCountMap.get(word);
-			}
-			
-			this.negativeWordCountMap.put(word, count);
+		
 		}
+		
+		return min;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMaxWordCount(){
+		
+		Integer max = null;
+		
+		if(!statusList.isEmpty()){
+			
+			max = statusList.get(0).getNetWordCount();
+			
+			int value = 0;
+			for(int i = 1; i < statusList.size(); i++){
+				
+				value = statusList.get(i).getNetWordCount();
+				if(value > max){
+					
+					max = value;
+				}
+			}
+		}
+		
+		return max;
+	}
+	
+	/**
+	 * 
+	 * @param startDate
+	 * @return
+	 */
+	public long getMinCreatedAtValue(Date startDate){
+		
+		Long min = null;
+		
+		if(!statusList.isEmpty()){
+		
+			min = statusList.get(0).getCreatedAtValue(startDate);
+			
+			long value = 0;
+			
+			for(int i = 1; i < statusList.size(); i++){
+				
+				value = statusList.get(i).getCreatedAtValue(startDate);
+				if(value < min){
+					min = value;
+				}
+			}
+		}
+		
+		return min;
+	}
+	
+	/**
+	 * 
+	 * @param startDate
+	 * @return
+	 */
+	public long getMaxCreatedAtValue(Date startDate){
+		
+		Long max = null;
+		
+		if(!statusList.isEmpty()){
+			
+			max = statusList.get(0).getCreatedAtValue(startDate);
+			
+			long value = 0;
+			
+			for(int i = 1; i < statusList.size(); i++){
+				
+				value = statusList.get(i).getCreatedAtValue(startDate);
+				if(value > max){
+					
+					max = value;
+				}
+			}
+		}
+		
+		return max;
 	}
 
 	/**
@@ -92,59 +170,19 @@ public class AnalysisResult {
 	}
 
 	/**
-	 * @return the userCount
+	 * 
+	 * @return
 	 */
-	public Integer getUserCount() {
-		return userCount;
+	public List<StatusAnalysis> getStatusList() {
+		return statusList;
 	}
 
 	/**
-	 * @param userCount the userCount to set
+	 * 
+	 * @param statusList
 	 */
-	public void setUserCount(Integer userCount) {
-		this.userCount = userCount;
-	}
-
-	/**
-	 * @return the postCount
-	 */
-	public Integer getPostCount() {
-		return postCount;
-	}
-
-	/**
-	 * @param postCount the postCount to set
-	 */
-	public void setPostCount(Integer postCount) {
-		this.postCount = postCount;
-	}
-
-	/**
-	 * @return the positiveWordCountMap
-	 */
-	public Map<String, Integer> getPositiveWordCountMap() {
-		return positiveWordCountMap;
-	}
-
-	/**
-	 * @param positiveWordCountMap the positiveWordCountMap to set
-	 */
-	public void setPositiveWordCountMap(Map<String, Integer> positiveWordCountMap) {
-		this.positiveWordCountMap = positiveWordCountMap;
-	}
-
-	/**
-	 * @return the negativeWordCountMap
-	 */
-	public Map<String, Integer> getNegativeWordCountMap() {
-		return negativeWordCountMap;
-	}
-
-	/**
-	 * @param negativeWordCountMap the negativeWordCountMap to set
-	 */
-	public void setNegativeWordCountMap(Map<String, Integer> negativeWordCountMap) {
-		this.negativeWordCountMap = negativeWordCountMap;
+	public void setStatusList(List<StatusAnalysis> statusList) {
+		this.statusList = statusList;
 	}
 
 }

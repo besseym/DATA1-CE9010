@@ -1,5 +1,7 @@
 
-import twitter4j.GeoLocation;
+import java.util.Calendar;
+import java.util.Date;
+
 import twitter4j.Query;
 import twitter4j.TwitterException;
 import twitter4j.conf.ConfigurationBuilder;
@@ -20,6 +22,23 @@ public class TwitterTest {
 	public TwitterTest() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Date getStartWindow(Date date){
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.MINUTE, -10);
+		
+		return c.getTime();
+	}
+	
+	public static long getSecondsDiff(Date startDate, Date endDate){
+		
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		
+		return ((end - start) / 1000);
+	}
 
 	/**
 	 * @param args
@@ -33,54 +52,47 @@ public class TwitterTest {
 		cb.setOAuthAccessToken("188482760-FXnx6MVyKSFVGdh6qZHteeKVsAxb3iz1pRweC5rt");
 		cb.setOAuthAccessTokenSecret("eUoRaPzK09hieT9tJxayPoGT2QDILZJPWEjdq0pAmJMVY");
 		
-		TwitterWrapper twitterWrapper = new TwitterWrapper(cb.build());
+		TwitterAlignmentAnalysis twitterWrapper = new TwitterAlignmentAnalysis(cb.build());
 		
 		try {
 			
 			Query query = new Query("#Homeland");
 			
-//			GeoLocation geolocation = new GeoLocation(40.6986770, -73.9859410);
-//			query.setGeoCode(geolocation, 10, Query.MILES);
+			Long maxPostId = null;
+			AnalysisResult result = new AnalysisResult();
 			
-			AnalysisResult result = twitterWrapper.analyze(query);
+			for(int i = 0; i < 1; i++){
 			
-			System.out.println("Number of Posts: " + result.getPostCount());
-			System.out.println("Number of Users: " + result.getUserCount());
-			System.out.println("Max Post Id: " + result.getMaxPostId());
-			System.out.println(result.getPositiveWordCountMap());
-			System.out.println(result.getNegativeWordCountMap());
-			
-//			Long maxId = null;
-			
-//			for(int i = 0; i < 2; i++){
-//			
-//				if(maxId != null){
-//					query.sinceId(maxId);
-//				}
-//				
-//				QueryResultWrapper queryResultWrapper = twitterWrapper.search(query);
-//				maxId = queryResultWrapper.getMaxId();
-//				
-//				System.out.println(maxId);
-//				System.out.println(queryResultWrapper.getResultCount());
-//				
-//				Thread.sleep(1000);
-//			}
-			
-			
-//			QueryResult result = twitter.search(query);
-//			List<Status> statusList = result.getTweets();
-//			for(Status status : statusList){
-//				System.out.print(status.getId());
-//				System.out.print(" ");
-//				System.out.println(status.getUser().getScreenName());
-//				System.out.println(status.getText());
-//				System.out.print(status.getCreatedAt());
-//				
-//				System.out.println(status.getRateLimitStatus());
-//				
-//				System.out.println();
-//			}
+				maxPostId = result.getMaxPostId();
+				if(maxPostId != null){
+					query.sinceId(maxPostId);
+				}
+				
+				twitterWrapper.analyze(query, result);
+				
+				System.out.println();
+				
+//				System.out.println("Number of Posts: " + result.getPostCount());
+//				System.out.println("Number of Users: " + result.getUserCount());
+//				System.out.println("Max Post Id: " + result.getMaxPostId());
+				System.out.println("Max: " + result.getMaxWordCount());
+				System.out.println("Min: " + result.getMinWordCount());
+				System.out.println("Numb statuses: " + result.getStatusList().size());
+				
+				Date now = new Date();
+				Date startDate = (new DateUtil()).getStartWindow(now);
+				result.removeOldStatuses(startDate);
+				
+				System.out.println("Now: " + new Date());
+				for(StatusAnalysis s : result.getStatusList()){
+					System.out.println(s.getText());
+//					System.out.println(s.getDateValue(startDate));
+				}
+				
+				System.out.println();
+				
+				Thread.sleep(5000);
+			}
 			
 		}
 		catch (TwitterException te) {

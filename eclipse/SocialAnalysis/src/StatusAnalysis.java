@@ -1,41 +1,46 @@
+import java.util.Date;
 import java.util.Map;
 
-/**
- * 
- */
+import twitter4j.Status;
 
 /**
  * @author besseym
  *
  */
-public class StatusAnalysis {
+public class StatusAnalysis implements Comparable<StatusAnalysis> {
 	
 	private Long id;
+	private String text;
+	private Date createdAt;
+	private String userScreenName;
+	
+	private Long createdAtValue;
+	
+	private Integer positiveWordCount;
+	private Integer negativeWordCount;
+	
 	private Map<String, Integer> positiveWordCountMap;
 	private Map<String, Integer> negativeWordCountMap;
 
 	/**
 	 * 
 	 */
-	public StatusAnalysis(long id) {
+	public StatusAnalysis(Status s) {
 		
-		this.id = Long.valueOf(id);
+		this.id = Long.valueOf(s.getId());
+		this.text = s.getText();
+		this.createdAt = s.getCreatedAt();
+		
+		this.userScreenName = s.getUser().getScreenName();
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public int getPositiveWordCount(){
-		return countWordTotal(positiveWordCountMap);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getNegativeWordCount(){
-		return countWordTotal(positiveWordCountMap);
+	public int getNetWordCount(){
+		
+		return this.positiveWordCount - this.negativeWordCount;
 	}
 	
 	/**
@@ -62,10 +67,49 @@ public class StatusAnalysis {
 	}
 
 	/**
-	 * @param id the id to set
+	 * 
+	 * @return
 	 */
-	public void setId(Long id) {
-		this.id = id;
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	
+	/**
+	 * 
+	 * @param startDate
+	 * @return
+	 */
+	public Long getCreatedAtValue(Date startDate){
+		
+		if(this.createdAtValue == null){
+			this.createdAtValue = (new DateUtil()).getSecondsDiff(startDate, this.createdAt);
+		}
+		
+		return createdAtValue;
+	}
+
+	/**
+	 * 
+	 * @param createdAtValue
+	 */
+	public void setCreatedAtValue(Long createdAtValue) {
+		this.createdAtValue = createdAtValue;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUserScreenName() {
+		return userScreenName;
 	}
 
 	/**
@@ -79,9 +123,36 @@ public class StatusAnalysis {
 	 * @param positiveWordCountMap the positiveWordCountMap to set
 	 */
 	public void setPositiveWordCountMap(Map<String, Integer> positiveWordCountMap) {
+		
 		this.positiveWordCountMap = positiveWordCountMap;
+		this.positiveWordCount = countWordTotal(positiveWordCountMap);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Integer getPositiveWordCount() {
+		return positiveWordCount;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Integer getNegativeWordCount() {
+		return negativeWordCount;
+	}
+
+	/**
+	 * @param negativeWordCountMap the negativeWordCountMap to set
+	 */
+	public void setNegativeWordCountMap(Map<String, Integer> negativeWordCountMap) {
+		
+		this.negativeWordCountMap = negativeWordCountMap;
+		this.negativeWordCount = countWordTotal(negativeWordCountMap);
+	}
+	
 	/**
 	 * @return the negativeWordCountMap
 	 */
@@ -89,11 +160,11 @@ public class StatusAnalysis {
 		return negativeWordCountMap;
 	}
 
-	/**
-	 * @param negativeWordCountMap the negativeWordCountMap to set
-	 */
-	public void setNegativeWordCountMap(Map<String, Integer> negativeWordCountMap) {
-		this.negativeWordCountMap = negativeWordCountMap;
+	@Override
+	public String toString() {
+		return "StatusAnalysis [id=" + id + ", createdAt=" + createdAt 
+				+ ", positiveWordCount=" + positiveWordCount 
+				+ ", negativeWordCount=" + negativeWordCount + "]";
 	}
 
 	/* (non-Javadoc)
@@ -125,6 +196,16 @@ public class StatusAnalysis {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(StatusAnalysis o) {
+		
+		return this.createdAt.compareTo(o.createdAt);
 	}
 
 }
