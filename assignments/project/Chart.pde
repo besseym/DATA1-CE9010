@@ -113,6 +113,9 @@ class TwitterAnalysisBubbleChart extends BubbleChart {
     int maxWordCount = analysisResult.getMaxWordCount();
     int minWordCount = analysisResult.getMinWordCount();
     
+    boolean isNeutral = (minWordCount == 0 && maxWordCount == 0);
+    float neutralY =  this.getDrawStartY() + ((this.getDrawEndY() - this.getDrawStartY()) / 2);
+    
     long minCreatedAtValue = analysisResult.getMinCreatedAtValue();
     long maxCreatedAtValue = analysisResult.getMaxCreatedAtValue();
     
@@ -133,7 +136,13 @@ class TwitterAnalysisBubbleChart extends BubbleChart {
       label = "(" + xValue + "," + yValue + ")";
       
       x = map(s.getCreatedAtValue(), 0, (new DateUtil()).getSecondsInWindow(), this.getDrawStartX(), this.getDrawEndX());
-      y = map(netWordCount, minWordCount, maxWordCount, this.getDrawEndY(), this.getDrawStartY());
+      
+      if(isNeutral){
+       y = neutralY;
+      }
+      else {
+        y = map(netWordCount, minWordCount, maxWordCount, this.getDrawEndY(), this.getDrawStartY());
+      }
       
       b = new StatusBubble(x, y, r);
       b.setStatus(s);
@@ -154,7 +163,12 @@ class TwitterAnalysisBubbleChart extends BubbleChart {
       newBubbleList.add(b);
     }
     
-    this.axisY = map(0.0, minWordCount, maxWordCount, this.getDrawEndY(), this.getDrawStartY());
+    if(isNeutral){
+      this.axisY = neutralY;
+    }
+    else {
+      this.axisY = map(0.0, minWordCount, maxWordCount, this.getDrawEndY(), this.getDrawStartY());
+    }
     
     this.bubbleList = new ArrayList<Bubble>();
     this.bubbleList.addAll(newBubbleList);

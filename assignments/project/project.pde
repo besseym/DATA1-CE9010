@@ -121,8 +121,10 @@ void generateStatusList(){
     s.setUserScreenName("besseym");
     s.setCreatedAt(createdAt);
     s.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque viverra et urna vel venenatis. Duis ante mi, molestie pretium cursus.");
-    s.setPositiveWordCount(int(random(0, 5)));
-    s.setNegativeWordCount(int(random(0, 5)));
+    s.setPositiveWordCount(0);
+    s.setNegativeWordCount(0);
+//    s.setPositiveWordCount(int(random(0, 5)));
+//    s.setNegativeWordCount(int(random(0, 5)));
     s.setCreatedAtValue(startWindowDate);
     analysisResult.getStatusList().add(s);
   }
