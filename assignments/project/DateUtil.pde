@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,11 +11,27 @@ import java.util.Date;
  *
  */
 public class DateUtil {
+  
+  private int secondsInWindow;
+  private SimpleDateFormat simpleDateFormat;
 
   /**
    * 
    */
-  public DateUtil() {}
+  public DateUtil() {
+    
+    this.secondsInWindow = 300;
+    this.simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+  }
+  
+  /**
+   * 
+   * @param date
+   * @return
+   */
+  public String formatDate(Date date){
+    return this.simpleDateFormat.format(date);
+  }
   
   /**
    * 
@@ -25,7 +42,7 @@ public class DateUtil {
     
     Calendar c = Calendar.getInstance();
     c.setTime(date);
-    c.add(Calendar.MINUTE, -5);
+    c.add(Calendar.SECOND, -this.secondsInWindow);
     
     return c.getTime();
   }
@@ -42,6 +59,28 @@ public class DateUtil {
     long end = endDate.getTime();
     
     return ((end - start) / 1000);
+  }
+  
+  /**
+   * 
+   * @param startDate
+   * @param seconds
+   * @return
+   */
+  public Date addSeconds(Date startDate, int seconds){
+    
+    Calendar c = Calendar.getInstance();
+    c.setTime(startDate);
+    c.add(Calendar.SECOND, seconds);
+    
+    return c.getTime();
+  }
+
+  /**
+   * @return the secondsInWindow
+   */
+  public int getSecondsInWindow() {
+    return secondsInWindow;
   }
 
 }

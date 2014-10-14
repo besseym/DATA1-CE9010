@@ -86,11 +86,17 @@ public class StatusAnalysis implements Comparable<StatusAnalysis> {
   }
 
   /**
-   * 
-   * @return
+   * @return the createdAt
    */
   public Date getCreatedAt() {
     return createdAt;
+  }
+
+  /**
+   * @param createdAt the createdAt to set
+   */
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
   
   /**
@@ -98,29 +104,30 @@ public class StatusAnalysis implements Comparable<StatusAnalysis> {
    * @param startDate
    * @return
    */
-  public Long getCreatedAtValue(Date startDate){
-    
-    if(this.createdAtValue == null){
-      this.createdAtValue = (new DateUtil()).getSecondsDiff(startDate, this.createdAt);
-    }
-    
+  public Long getCreatedAtValue(){
     return createdAtValue;
-  }
-  
-  /**
-   * 
-   * @param createdAtValue
-   */
-  public void setCreatedAtValue(Long createdAtValue) {
-    this.createdAtValue = createdAtValue;
   }
 
   /**
    * 
-   * @return
+   * @param createdAtValue
+   */
+  public void setCreatedAtValue(Date startDate) {
+    this.createdAtValue = (new DateUtil()).getSecondsDiff(startDate, this.createdAt);
+  }
+
+  /**
+   * @return the userScreenName
    */
   public String getUserScreenName() {
     return userScreenName;
+  }
+
+  /**
+   * @param userScreenName the userScreenName to set
+   */
+  public void setUserScreenName(String userScreenName) {
+    this.userScreenName = userScreenName;
   }
 
   /**
