@@ -81,7 +81,7 @@ public class TwitterTest {
 				
 				Date now = new Date();
 				Date startDate = (new DateUtil()).getStartWindow(now);
-				result.removeOldStatuses(startDate);
+				result.removeOutOfWindowStatuses(startDate, now);
 				
 				System.out.println("Now: " + new Date());
 				for(StatusAnalysis s : result.getStatusList()){

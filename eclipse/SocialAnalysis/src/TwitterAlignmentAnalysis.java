@@ -42,7 +42,6 @@ public class TwitterAlignmentAnalysis {
 	public void analyze(Query query, AnalysisResult result) throws TwitterException{
 		
 		QueryResult queryResult = twitter.search(query);
-		result.setMaxPostId(queryResult.getMaxId());
 		
 		List<Status> statusList = queryResult.getTweets();
 		

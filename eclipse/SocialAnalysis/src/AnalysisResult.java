@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +11,6 @@ import java.util.List;
  *
  */
 public class AnalysisResult {
-
-	private Long maxPostId;
 	
 	private List<StatusAnalysis> statusList;
 	
@@ -21,9 +18,6 @@ public class AnalysisResult {
 	 * 
 	 */
 	public AnalysisResult() {
-		
-		this.maxPostId = null;
-		
 		this.statusList = new ArrayList<StatusAnalysis>();
 	}
 	
@@ -31,13 +25,13 @@ public class AnalysisResult {
 	 * 
 	 * @param date
 	 */
-	public void removeOldStatuses(Date date){
+	public void removeOutOfWindowStatuses(Date startDate, Date endDate){
 		
 		List<StatusAnalysis> removeList = new ArrayList<StatusAnalysis>();
 		
 		for(StatusAnalysis s : statusList){
 			
-			if(s.getCreatedAt().before(date)){
+			if(s.getCreatedAt().before(startDate) || s.getCreatedAt().after(endDate)){
 				removeList.add(s);
 			}
 		}
@@ -45,6 +39,59 @@ public class AnalysisResult {
 		for(StatusAnalysis s : removeList){
 			statusList.remove(s);
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getMaxPostId(){
+		
+		Long max = null;
+		
+		if(!statusList.isEmpty()){
+			
+			max = statusList.get(0).getId();
+			
+			Long value = null;
+			for(int i = 1; i < statusList.size(); i++){
+				
+				value = statusList.get(i).getId();
+				if(value > max){
+					
+					max = value;
+				}
+			}
+		}
+		
+		return max;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Date getMinCreatedAt(){
+		
+		Date min = null;
+		
+		if(!statusList.isEmpty()){
+			
+			min = statusList.get(0).getCreatedAt();
+			
+			Date value = null;
+			for(int i = 1; i < statusList.size(); i++){
+				
+				value = statusList.get(i).getCreatedAt();
+				if(value.before(min)){
+					
+					min = value;
+				}
+			}
+		
+		}
+		
+		return min;
 	}
 	
 	/**
@@ -59,7 +106,7 @@ public class AnalysisResult {
 			
 			min = statusList.get(0).getNetWordCount();
 			
-			int value = 0;
+			Integer value = null;
 			for(int i = 1; i < statusList.size(); i++){
 				
 				value = statusList.get(i).getNetWordCount();
@@ -78,7 +125,7 @@ public class AnalysisResult {
 	 * 
 	 * @return
 	 */
-	public int getMaxWordCount(){
+	public Integer getMaxWordCount(){
 		
 		Integer max = null;
 		
@@ -86,7 +133,7 @@ public class AnalysisResult {
 			
 			max = statusList.get(0).getNetWordCount();
 			
-			int value = 0;
+			Integer value = null;
 			for(int i = 1; i < statusList.size(); i++){
 				
 				value = statusList.get(i).getNetWordCount();
@@ -105,19 +152,19 @@ public class AnalysisResult {
 	 * @param startDate
 	 * @return
 	 */
-	public long getMinCreatedAtValue(Date startDate){
+	public Long getMinCreatedAtValue(){
 		
 		Long min = null;
 		
 		if(!statusList.isEmpty()){
 		
-			min = statusList.get(0).getCreatedAtValue(startDate);
+			min = statusList.get(0).getCreatedAtValue();
 			
-			long value = 0;
+			Long value = null;
 			
 			for(int i = 1; i < statusList.size(); i++){
 				
-				value = statusList.get(i).getCreatedAtValue(startDate);
+				value = statusList.get(i).getCreatedAtValue();
 				if(value < min){
 					min = value;
 				}
@@ -132,19 +179,19 @@ public class AnalysisResult {
 	 * @param startDate
 	 * @return
 	 */
-	public long getMaxCreatedAtValue(Date startDate){
+	public Long getMaxCreatedAtValue(){
 		
 		Long max = null;
 		
 		if(!statusList.isEmpty()){
 			
-			max = statusList.get(0).getCreatedAtValue(startDate);
+			max = statusList.get(0).getCreatedAtValue();
 			
-			long value = 0;
+			Long value = null;
 			
 			for(int i = 1; i < statusList.size(); i++){
 				
-				value = statusList.get(i).getCreatedAtValue(startDate);
+				value = statusList.get(i).getCreatedAtValue();
 				if(value > max){
 					
 					max = value;
@@ -154,19 +201,16 @@ public class AnalysisResult {
 		
 		return max;
 	}
-
+	
 	/**
-	 * @return the maxPostId
+	 * 
+	 * @param startDate
 	 */
-	public Long getMaxPostId() {
-		return maxPostId;
-	}
-
-	/**
-	 * @param maxPostId the maxPostId to set
-	 */
-	public void setMaxPostId(Long maxPostId) {
-		this.maxPostId = maxPostId;
+	public void updateCreatedAtValue(Date startDate){
+		
+		for(StatusAnalysis status : this.statusList){
+			status.setCreatedAtValue(startDate);
+		}
 	}
 
 	/**
