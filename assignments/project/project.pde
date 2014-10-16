@@ -68,7 +68,7 @@ void draw(){
   textSize(50);
   text(title, marginArray[M_LEFT], marginArray[M_TOP], width/2, height/2);
   
-  textSize(20);
+  textSize(28);
   float lineHeight = textAscent() + textDescent();
   text(topic, width/2, marginArray[M_TOP]);
   
