@@ -20,7 +20,7 @@ public class DateUtil {
    */
   public DateUtil() {
     
-    this.secondsInWindow = 300;
+    this.secondsInWindow = 600;
     this.simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
   }
   

@@ -21,7 +21,7 @@ TwitterAnalysisBubbleChart chart;
 void setup(){
   
   smooth();
-  size(600, 400);
+  size(800, 500);
   
   bgColor = color(220);
   ftColor = color(0);
@@ -36,7 +36,8 @@ void setup(){
   float chartHeight = height/2 - (marginArray[M_BOTTOM]);
   
   chart = new TwitterAnalysisBubbleChart(marginArray[M_LEFT], height/2, chartWidth, chartHeight);
-  chart.setPadding(5.0);
+  chart.setPadding(0.0, 15.0);
+  chart.bRadius = 10.0;
   
   //twitter configuration
   ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -64,7 +65,7 @@ void draw(){
   
   fill(ftColor);
   textAlign(LEFT, TOP);
-  textSize(40);
+  textSize(50);
   text(title, marginArray[M_LEFT], marginArray[M_TOP], width/2, height/2);
   
   textSize(20);
@@ -73,8 +74,6 @@ void draw(){
   
   imageMode(CORNERS);
   image(topicImg, width/2, marginArray[M_TOP] + lineHeight, width - marginArray[M_RIGHT], height/2);
-  
-  chart.display();
   
   textSize(11);
   fill(ftColor);
@@ -92,6 +91,8 @@ void draw(){
     text(timestampLabel, 0, 0);
     popMatrix();
   }
+  
+  chart.display();
   
   //display details rollover
   for(Bubble b : chart.bubbleList){
@@ -121,10 +122,10 @@ void generateStatusList(){
     s.setUserScreenName("besseym");
     s.setCreatedAt(createdAt);
     s.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque viverra et urna vel venenatis. Duis ante mi, molestie pretium cursus.");
-    s.setPositiveWordCount(0);
-    s.setNegativeWordCount(0);
-//    s.setPositiveWordCount(int(random(0, 5)));
-//    s.setNegativeWordCount(int(random(0, 5)));
+//    s.setPositiveWordCount(0);
+//    s.setNegativeWordCount(0);
+    s.setPositiveWordCount(int(random(0, 5)));
+    s.setNegativeWordCount(int(random(0, 5)));
     s.setCreatedAtValue(startWindowDate);
     analysisResult.getStatusList().add(s);
   }
